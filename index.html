@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026年石川県知事選：金沢の城塞と保守地殻変動の全貌</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
+        
+        :root {
+            --color-blue-dark: #1E3A8A;
+            --color-blue-mid: #3B82F6;
+            --color-amber: #F59E0B;
+            --color-danger: #EF4444;
+            --color-bg: #F8FAFC;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--color-bg);
+            color: #1E293B;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            height: 350px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #1E3A8A 0%, #172554 100%);
+        }
+
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body class="antialiased pb-20">
+
+<!--
+[Narrative & Structure]
+1. Hero: The 6,110 vote margin mystery.
+2. Final Count Stats: Using the precise 245,674 vs 239,564 figures.
+3. Kanazawa Deep Dive: Comparing 2022 vs 2026 to show Yamano's "Impenetrable Fortress" despite Mayor Murayama's support for Hase.
+4. Yamada Factor Reconciled: Explaining why 45% Yamada flow to Hase didn't save him (Incumbent Base Erosion).
+5. Conclusion: 4 Pillars of the structural shift.
+
+[Visualizations]
+- Total Result: Big Metrics + Stacked Bar (Chart.js)
+- Kanazawa Growth: Grouped Bar (Chart.js)
+- Yamada Flow: Donut (Chart.js)
+- The Defeat Bridge: Waterfall (Plotly Canvas mode)
+
+Confirming: NO MERMAID, NO SVG used.
+Color Palette: Brilliant Blues (Professional) + Energetic Amber (Dynamic).
+-->
+
+    <header class="hero-section text-white pt-20 pb-28 px-6 relative">
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="stat-badge bg-amber-400 text-blue-900 mb-6 tracking-widest">Election Analysis 2026</div>
+            <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
+                2026年 石川県知事選挙<br>
+                <span class="text-amber-400">「金沢の城塞」と6,110票の審判</span>
+            </h1>
+            <p class="text-blue-100 text-lg md:text-xl max-w-3xl leading-relaxed opacity-90">
+                組織の論理を個人の信頼が上回った瞬間。現職・馳氏が金沢市長の応援を取り付けるも、山野氏が金沢市で11万票に迫る歴史的得票を記録。山田票の移動データから読み解く、真の勝因とは。
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 -mt-16">
+
+        <!-- 1. Result Metrics -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            <div class="glass-card p-8 md:col-span-2 border-l-8 border-amber-500">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+                    <div class="flex-1">
+                        <h2 class="text-gray-400 text-sm font-bold uppercase tracking-widest mb-1">Winner (当選)</h2>
+                        <p class="text-4xl font-black text-slate-800">山野 之義</p>
+                        <p class="text-5xl font-black text-amber-500 mt-2">245,674 <span class="text-lg">票</span></p>
+                    </div>
+                    <div class="flex-1 border-l border-gray-100 pl-0 md:pl-6">
+                        <h2 class="text-gray-400 text-sm font-bold uppercase tracking-widest mb-1">Incumbent (現職)</h2>
+                        <p class="text-3xl font-black text-slate-400">馳 浩</p>
+                        <p class="text-4xl font-black text-slate-500 mt-2">239,564 <span class="text-lg">票</span></p>
+                    </div>
+                </div>
+                <div class="pt-6 border-t border-gray-100">
+                    <div class="flex justify-between items-center">
+                        <p class="text-lg font-bold text-slate-700">得票差: <span class="text-rose-600 text-2xl">6,110 票</span></p>
+                        <div class="text-xs font-bold text-gray-400 uppercase">Margin: 1.26%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="glass-card p-8 bg-blue-900 text-white flex flex-col justify-center">
+                <h3 class="text-xl font-black text-amber-400 mb-4">分析の核心</h3>
+                <p class="text-sm leading-relaxed text-blue-100">
+                    馳氏は山田票の45%を回収しながらも、前回支持層から約2万票を喪失。対して山野氏は金沢市を中心に「組織を越えた個人支持」を上積みし、逆転を果たしました。
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. Kanazawa Data Comparison -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-black text-blue-900 mb-6 flex items-center gap-3">
+                <span class="w-10 h-10 bg-blue-900 text-white rounded flex items-center justify-center text-sm italic">Focus</span>
+                金沢市：山野氏の「揺るぎない城塞」
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-8 rounded-3xl shadow-sm">
+                <div>
+                    <p class="text-gray-600 leading-relaxed mb-6">
+                        2022年の三つ巴でも強さを見せた山野氏ですが、2026年は<b>村山市長の馳氏支持</b>という逆風下で、さらに票を積み増しました。金沢市民が「組織の推薦」よりも「山野氏の11年の実績」を優先した結果です。
+                    </p>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-amber-50 rounded-xl flex justify-between items-center">
+                            <div>
+                                <p class="text-xs font-bold text-amber-800">山野氏 金沢得票 (2026)</p>
+                                <p class="text-2xl font-black text-amber-900">109,854 票</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-amber-600">前回比</p>
+                                <p class="text-lg font-bold text-amber-600">+11,047</p>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-xl flex justify-between items-center">
+                            <div>
+                                <p class="text-xs font-bold text-blue-800">馳氏 金沢得票 (2026)</p>
+                                <p class="text-2xl font-black text-blue-900">75,876 票</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-blue-600">前回比</p>
+                                <p class="text-lg font-bold text-blue-600">+5,226</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="kanazawaComparisonChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. The Yamada Vote & Base Erosion Logic -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-black text-blue-900 mb-6">山田票の移動と馳氏の「基盤浸食」分析</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+                <!-- Yamada Flow -->
+                <div class="glass-card p-8">
+                    <h3 class="text-lg font-bold text-gray-700 mb-6 text-center">山田修路票 (13.7万票) の行方</h3>
+                    <div class="chart-container h-64">
+                        <canvas id="yamadaFlowChart"></canvas>
+                    </div>
+                    <div class="mt-6 text-xs text-gray-500 leading-relaxed border-t pt-4">
+                        <p>山田票の45%（約6.1万票）が馳氏へ流入。本来ならこれが勝敗を決定づけるはずでしたが、馳氏の既存支持層からの離反がこれを打ち消しました。</p>
+                    </div>
+                </div>
+                <!-- Incumbent Bridge -->
+                <div class="glass-card p-8 flex flex-col">
+                    <h3 class="text-lg font-bold text-gray-700 mb-6 text-center">馳氏：得票増減のウォーターフォール</h3>
+                    <div id="waterfallChart" class="flex-grow" style="height: 300px;"></div>
+                    <div class="mt-4 p-4 bg-rose-50 rounded-lg">
+                        <p class="text-xs text-rose-800 font-bold leading-relaxed">
+                            【分析結果】山田票を6.1万票獲得しながら、最終得票が23.9万票に留まった事実は、2022年の馳氏支持者（19.8万）から<b>約2万票以上が離反</b>したことを証明しています。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Structural Shift Summary -->
+        <section class="mb-20">
+            <div class="bg-blue-900 rounded-3xl p-10 text-white">
+                <h2 class="text-3xl font-black mb-10 text-center text-amber-400">政権交代を導いた4つの構造的要因</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 shrink-0 bg-blue-800 rounded-2xl flex items-center justify-center font-black text-amber-400 border border-blue-700">01</div>
+                        <div>
+                            <h4 class="text-lg font-bold mb-2">金沢市長応援の「不発」</h4>
+                            <p class="text-blue-100 text-sm leading-relaxed">村山市長による馳氏への組織的支援は、山野前市長に対する「市民の個人的な信頼」を崩すには至らず、金沢市でのマージン（3.3万票差）を許した。</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 shrink-0 bg-blue-800 rounded-2xl flex items-center justify-center font-black text-amber-400 border border-blue-700">02</div>
+                        <div>
+                            <h4 class="text-lg font-bold mb-2">馳支持層の「サイレント離反」</h4>
+                            <p class="text-blue-100 text-sm leading-relaxed">能登復興の停滞や自民党への不信感から、前回馳氏を支持した層のうち約1割が、今回山野氏へ転じたか棄権に回った。</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 shrink-0 bg-blue-800 rounded-2xl flex items-center justify-center font-black text-amber-400 border border-blue-700">03</div>
+                        <div>
+                            <h4 class="text-lg font-bold mb-2">山田票の「戦略的分断」</h4>
+                            <p class="text-blue-100 text-sm leading-relaxed">山田票の45%は馳氏に戻ったが、残りの35%（山野氏へ）と20%（棄権等）が山野氏の勝利を数学的に下支えした。</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 shrink-0 bg-blue-800 rounded-2xl flex items-center justify-center font-black text-amber-400 border border-blue-700">04</div>
+                        <div>
+                            <h4 class="text-lg font-bold mb-2">「安定感」の比較対象の変化</h4>
+                            <p class="text-blue-100 text-sm leading-relaxed">現職の「国とのパイプ」というアピールに対し、山野氏が掲げた「県民に寄り添う実務」が、不安を抱える有権者に訴求した。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-16 text-center text-gray-400 text-xs border-t border-gray-100">
+        <p>石川県知事選挙 2026 構造分析最終報告書</p>
+        <p class="mt-2 font-bold">データソース：2026年確定得票数（山野氏 245,674 / 馳氏 239,564）</p>
+    </footer>
+
+    <script>
+        // Label Wrap Logic
+        const wrapLabel = (label) => {
+            if (typeof label !== 'string') return label;
+            if (label.length <= 16) return label;
+            const res = [];
+            for (let i = 0; i < label.length; i += 16) {
+                res.push(label.substring(i, i + 16));
+            }
+            return res;
+        };
+
+        const commonTooltip = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    return Array.isArray(label) ? label.join('') : label;
+                }
+            }
+        };
+
+        Chart.defaults.font.family = "'Noto Sans JP', sans-serif";
+        Chart.defaults.color = '#64748b';
+
+        // 1. Kanazawa Comparison Chart
+        const ctxKz = document.getElementById('kanazawaComparisonChart').getContext('2d');
+        new Chart(ctxKz, {
+            type: 'bar',
+            data: {
+                labels: ['2022年 実績', '2026年 確定'].map(wrapLabel),
+                datasets: [
+                    {
+                        label: '山野 之義 (金沢)',
+                        data: [98807, 109854],
+                        backgroundColor: '#F59E0B',
+                        borderRadius: 10
+                    },
+                    {
+                        label: '馳 浩 (金沢)',
+                        data: [70650, 75876],
+                        backgroundColor: '#1E3A8A',
+                        borderRadius: 10
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: commonTooltip
+                },
+                scales: {
+                    y: { beginAtZero: false, min: 60000, grid: { color: '#f1f5f9' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 2. Yamada Flow Donut
+        const ctxYamada = document.getElementById('yamadaFlowChart').getContext('2d');
+        new Chart(ctxYamada, {
+            type: 'doughnut',
+            data: {
+                labels: ['馳氏へ (45%)', '山野氏へ (35%)', '棄権・他 (20%)'].map(wrapLabel),
+                datasets: [{
+                    data: [45, 35, 20],
+                    backgroundColor: ['#1E3A8A', '#F59E0B', '#E2E8F0'],
+                    borderWidth: 0,
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: commonTooltip
+                },
+                cutout: '70%'
+            }
+        });
+
+        // 3. Waterfall (Plotly)
+        window.onload = function() {
+            const data = [{
+                type: "waterfall",
+                orientation: "v",
+                measure: ["absolute", "relative", "relative", "total"],
+                x: ["2022年 基礎票", "山田票流入(45%)", "既存支持層離反", "2026年 確定"],
+                textposition: "outside",
+                text: ["198k", "+61k", "-20k", "239k"],
+                y: [198436, 61798, -20670, 239564],
+                connector: { line: { color: "rgb(63, 63, 63)" } },
+                increasing: { marker: { color: "#3B82F6" } },
+                decreasing: { marker: { color: "#EF4444" } },
+                totals: { marker: { color: "#1E3A8A" } }
+            }];
+
+            const layout = {
+                font: { family: 'Noto Sans JP', size: 11 },
+                margin: { l: 40, r: 40, b: 40, t: 20 },
+                xaxis: { type: "category" },
+                yaxis: { gridcolor: "#f1f5f9" },
+                plot_bgcolor: "rgba(0,0,0,0)",
+                paper_bgcolor: "rgba(0,0,0,0)"
+            };
+
+            Plotly.newPlot('waterfallChart', data, layout, {responsive: true, displayModeBar: false});
+        };
+    </script>
+</body>
+</html>
